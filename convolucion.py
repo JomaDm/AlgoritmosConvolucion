@@ -21,7 +21,13 @@ def ingresa_serie(nom):
 
 	print("Ingresa la secuencia " + nom + " :\n ")
 	while( len(s) < sn):
-		s.append(int(input(( nom +" = " + str(s) + ": "))))
+		number = input(( nom +" = " + str(s) + ": "))
+		try:
+			number = int(number)
+		except ValueError :
+			number = float(number)
+
+		s.append(number)
 	clearScreen()
 	print(nom + " = " + str(s))
 	return s
@@ -50,6 +56,25 @@ def muestra_serie(s,nom,indice,periodica):
 
 	print(str_s + str(s[indice]))
 
+	
+
+def obtencionIndice0(serie):
+	ini = input("¿Cuál es el elemento de inicio?: ")
+	try:
+		ini = float(ini)
+	except :
+		ini = int(ini)
+
+	if ini in serie and serie.count(ini) == 1 :
+		return serie.index(ini)
+	elif ini in serie and serie.count(ini) > 1 :
+		repetidos = []
+		for index,element in enumerate(serie):
+			if element == ini:
+				repetidos.append(index+1)
+		print("El numero",ini,"se encuentra repetido varias veces en las posiciones"," , ".join(repetidos))
+		return int(input("Por favor elige que posicion es la adecuada: "))-1
+
 #Funcion que hace el algoritmo de convolución periódica
 def conv_periodica():
 	clearScreen()
@@ -59,14 +84,13 @@ def conv_periodica():
 
 	#Se ingresa la secuencia x(n)
 	x = ingresa_serie("x(n)")
-	x_ini = input("¿Cuál es el elemento de inicio?")
-	x_ini = x.index(x_ini)
+	x_ini = obtencionIndice0(x)
+
 	clearScreen()
 
 	#Se ingresa la secuencia h(n)
 	h = ingresa_serie("h(n)")
-	h_ini = input("¿Cuál es el elemento de inicio?")
-	h_ini = h.index(h_ini)
+	h_ini = obtencionIndice0(h)
 	clearScreen()
 
 	#Se muestran las secuencias ingresadas
@@ -148,14 +172,12 @@ def conv_circular():
 
 	#Se ingresa la secuencia x(n)
 	x = ingresa_serie("x(n)")
-	x_ini = input("¿Cuál es el elemento de inicio?")
-	x_ini = x.index(x_ini)
+	x_ini = obtencionIndice0(x)
 	clearScreen()
 
 	#Se ingresa la secuencia h(n)
 	h = ingresa_serie("h(n)")
-	h_ini = input("¿Cuál es el elemento de inicio?")
-	h_ini = h.index(h_ini)
+	h_ini = obtencionIndice0(h)
 	clearScreen()
 
 	#Se muestran las secuencias ingresadas
@@ -233,14 +255,58 @@ def conv_circular():
 	input("\nPresiona enter para continuar...")
 
 def conv_finita():
+	clearScreen()
+	print("\tCONVOLUCIÓN FINITA\nINSTRUCCIONES\n1.Considera a x(n) y h(n) como funciones no periodicas \n2.Ingresa un elemento a la vez\n")
+	input("\nPresiona enter para continuar...")
+	clearScreen()
 
+	#Se ingresa la secuencia x(n)
+	x = ingresa_serie("x(n)")
+	x_ini = obtencionIndice0(x)
+	clearScreen()
+
+	#Se ingresa la secuencia h(n)
+	h = ingresa_serie("h(n)")
+	h_ini = obtencionIndice0(h)
+	clearScreen()
+
+	#Se muestran las secuencias ingresadas
+	muestra_serie(x,"x(n)",x_ini,False)
+	muestra_serie(h,"h(n)",h_ini,False)
+
+	n = len(x) + len(h) - 1
+
+	cx = [[0 for i in range(n)] for i in range(n)]
+	aux = [0 for i in range(n - len(x))]
+	aux_x = x + aux
+	for i in range(n):
+		for j in range(n):
+			cx[j][i] = aux_x[j]
+		last_item = aux_x[-1]
+		aux_x = aux_x[:len(aux_x)-1]
+		aux_x.insert(0,last_item)
+
+	aux = [0 for i in range(n - len(h))]
+	aux_h = h + aux
+
+	y=[]
+	aux_suma=0
+	for j in range(n):
+		for k in range(n):
+			aux_suma += cx[j][k] * aux_h[k]
+		y.append(aux_suma)
+		aux_suma = 0
+
+	y_ini = x_ini + h_ini
+
+	muestra_serie(y,"y(n)",y_ini,False)
 
 clearScreen()
 op = 0
 while(op != 5):
 	op = int(input("\tCONVOLUCIÓN DISCRETA\n\nSi y(n) = x(n)*y(n)\n\n1.Convolución Finita\n2.Convolución Periodica\n3.Convolución Circular\n4.Gráficas de Entrada/Salida\n5.Salir\nOpcion:"))
 	if( op == 1):
-		print("CONVOLUCIÓN Finita")
+		conv_finita()
 	if( op == 2):
 		conv_periodica()
 	if( op == 3):
