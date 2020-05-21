@@ -1,12 +1,16 @@
-#INSTITUTO POLITÉCNICO NACIONAL - ESCUELA SUPERIOR DE CÓMPUTO 
+#INSTITUTO POLITÉCNICO NACIONAL - ESCUELA SUPERIOR DE CÓMPUTO
 #Bonilla Reyes José Luis
 #Domínguez Morales José Manuel
 
 import os
+from sys import platform
 
-#Comando para borrar pantalla
-borrar = "clear"; #Linux
-#borrar = "cls"; #Windows
+#Funcion que detecta el sistema operativo y relaciona su comando para borrar la pantalla
+def clearScreen():
+    if platform == "win32":
+        os.system("cls")
+    else:
+        os.system("clear")
 
 #Funcion que guarda la secuencia de los elementos introducidos por el usuario
 #Recibe como parámetro el nombre de la secuencia
@@ -18,8 +22,8 @@ def ingresa_serie(nom):
 	print("Ingresa la secuencia " + nom + " :\n ")
 	while( len(s) < sn):
 		s.append(int(input(( nom +" = " + str(s) + ": "))))
-	os.system(borrar)
-	print(nom + " = " + str(s))	
+	clearScreen()
+	print(nom + " = " + str(s))
 	return s
 
 #Funcion que muestra en pantalla la secuencia
@@ -34,7 +38,7 @@ def muestra_serie(s,nom,indice,periodica):
 			str_s = str_s + ", " + str(s[i])
 		for i in range(len(s)):
 			str_s = str_s + ", " + str(s[i])
-		str_s = str_s + " }      n(0) = "		
+		str_s = str_s + " }      n(0) = "
 	else:
 		str_s = nom +" = { "
 		for i in range(len(s)):
@@ -43,34 +47,34 @@ def muestra_serie(s,nom,indice,periodica):
 			else:
 				str_s = str_s + ", " + str(s[i])
 		str_s = str_s + " }      n(0) = "
-	
+
 	print(str_s + str(s[indice]))
 
 #Funcion que hace el algoritmo de convolución periódica
 def conv_periodica():
-	os.system(borrar)
+	clearScreen()
 	print("\tCONVOLUCIÓN PERIÓDICA\nINSTRUCCIONES\n1.Considera a x(n) como la funcion periodica y no repita elementos (se entiende que los elementos que ingrese van a repetir infinitamente) \n2.Ingresa un elemento a la vez\n")
 	input("\nPresiona enter para continuar...")
-	os.system('cls')	
+	clearScreen()
 
 	#Se ingresa la secuencia x(n)
 	x = ingresa_serie("x(n)")
-	x_ini = int(input("¿Cuál es el elemento de inicio?"))
+	x_ini = input("¿Cuál es el elemento de inicio?")
 	x_ini = x.index(x_ini)
-	os.system(borrar)	
+	clearScreen()
 
 	#Se ingresa la secuencia h(n)
 	h = ingresa_serie("h(n)")
-	h_ini = int(input("¿Cuál es el elemento de inicio?"))
+	h_ini = input("¿Cuál es el elemento de inicio?")
 	h_ini = h.index(h_ini)
-	os.system(borrar)	
+	clearScreen()
 
 	#Se muestran las secuencias ingresadas
 	muestra_serie(x,"x(n)",x_ini,True)
-	muestra_serie(h,"h(n)",h_ini,False)	
+	muestra_serie(h,"h(n)",h_ini,False)
 
 	#ALGORITMO CONVOLUCIÓN PERIÓDICA:
-	
+
 	renglones = []
 
 	#Se obtiene la secuencia de mayor tamaño
@@ -86,7 +90,7 @@ def conv_periodica():
 		rengaux = []
 		for j in range(len(sec_mayor)):
 			rengaux.append(sec_mayor[j]*sec_menor[i])
-		renglones.append(rengaux)	
+		renglones.append(rengaux)
 
 	#Suma de renglones:
 	for i in range (len(sec_menor)-1):
@@ -97,29 +101,29 @@ def conv_periodica():
 		else:
 			for j in range (i):
 				renglones[i].insert(0,0)
-				renglones[len(sec_menor)-1-i].append(0)	
+				renglones[len(sec_menor)-1-i].append(0)
 
 	sum_resul = []
 	for i in range (len(renglones[0])):
 		suma = 0
 		for j in range (len(sec_menor)):
 			suma = suma + renglones[j][i]
-		sum_resul.insert(i,suma)	
+		sum_resul.insert(i,suma)
 
 	#Se separa la secuencia en bloques de tamaño del periodo
-	secuencia_bloques = []	
+	secuencia_bloques = []
 
 	periodo = len(x)
 	for i in range(len(sum_resul)//periodo):
-		secuencia_bloques.append(sum_resul[periodo*i:periodo*(i+1)])	
+		secuencia_bloques.append(sum_resul[periodo*i:periodo*(i+1)])
 
 	#Suma de la secuencia en bloques para obtener la secuencia final
 	y = []
 	for i in range(len(secuencia_bloques[0])):
 		suma = 0
 		for j in range (len(secuencia_bloques)):
-			suma = suma + secuencia_bloques[j][i] 
-		y.insert(i,suma)	
+			suma = suma + secuencia_bloques[j][i]
+		y.insert(i,suma)
 
 	#Se obtiene el indice de inicio de la secuencia
 	y_ini = ((x_ini*-1)+(h_ini*-1))*-1
@@ -130,33 +134,33 @@ def conv_periodica():
 		else:
 			indice += 1
 
-	y_ini = indice	
+	y_ini = indice
 
 	muestra_serie(y,"y(n)",y_ini,True)
 	input("\nPresiona enter para continuar...")
 
 #Funcion que hace el algoritmo de convolución periódica
 def conv_circular():
-	os.system('cls')
+	clearScreen()
 	print("\tCONVOLUCIÓN CIRCULAR\nINSTRUCCIONES\n1.Considera a x(n) y h(n) como funciones periodicas y no repita elementos (se entiende que los elementos que ingrese van a repetir infinitamente) \n2.Ingresa un elemento a la vez\n")
 	input("\nPresiona enter para continuar...")
-	os.system(borrar)	
+	clearScreen()
 
 	#Se ingresa la secuencia x(n)
 	x = ingresa_serie("x(n)")
-	x_ini = int(input("¿Cuál es el elemento de inicio?"))
+	x_ini = input("¿Cuál es el elemento de inicio?")
 	x_ini = x.index(x_ini)
-	os.system(borrar)	
+	clearScreen()
 
 	#Se ingresa la secuencia h(n)
 	h = ingresa_serie("h(n)")
-	h_ini = int(input("¿Cuál es el elemento de inicio?"))
+	h_ini = input("¿Cuál es el elemento de inicio?")
 	h_ini = h.index(h_ini)
-	os.system(borrar)	
+	clearScreen()
 
 	#Se muestran las secuencias ingresadas
 	muestra_serie(x,"x(n)",x_ini,True)
-	muestra_serie(h,"h(n)",h_ini,True)	
+	muestra_serie(h,"h(n)",h_ini,True)
 
 	#ALGORITMO CONVOLUCIÓN CIRCULAR:
 
@@ -175,7 +179,7 @@ def conv_circular():
 		rengaux = []
 		for j in range(len(sec_mayor)):
 			rengaux.append(sec_mayor[j]*sec_menor[i])
-		renglones.append(rengaux)	
+		renglones.append(rengaux)
 
 	#Suma de renglones:
 	for i in range (len(sec_menor)-1):
@@ -186,53 +190,56 @@ def conv_circular():
 		else:
 			for j in range (i):
 				renglones[i].insert(0,0)
-				renglones[len(sec_menor)-1-i].append(0)	
+				renglones[len(sec_menor)-1-i].append(0)
 
 	sum_resul = []
 	for i in range (len(renglones[0])):
 		suma = 0
 		for j in range (len(sec_menor)):
 			suma = suma + renglones[j][i]
-		sum_resul.insert(i,suma)	
+		sum_resul.insert(i,suma)
 
 	#Se rellena la secuencia con ceros para poder separarla
 	while(len(sum_resul)%periodo != 0):
-		sum_resul.append(0)	
+		sum_resul.append(0)
 
 	#Se separa la secuencia en bloques de tamaño del periodo
-	secuencia_bloques = []	
+	secuencia_bloques = []
 
 	for i in range(len(sum_resul)//periodo):
-		secuencia_bloques.append(sum_resul[periodo*i:periodo*(i+1)])	
+		secuencia_bloques.append(sum_resul[periodo*i:periodo*(i+1)])
 
 	#Suma de la secuencia en bloques para obtener la secuencia final
 	y = []
 	for i in range(len(secuencia_bloques[0])):
 		suma = 0
 		for j in range (len(secuencia_bloques)):
-			suma = suma + secuencia_bloques[j][i] 
-		y.insert(i,suma)	
+			suma = suma + secuencia_bloques[j][i]
+		y.insert(i,suma)
 
 	#Se obtiene el indice de inicio de la secuencia
 	y_ini = ((x_ini*-1)+(h_ini*-1))*-1
-	indice = 0	
+	indice = 0
 	for i in range(y_ini):
 		if(indice == periodo-1):
 			indice = 0
 		else:
 			indice += 1
 
-	y_ini = indice		
+	y_ini = indice
 
 
 	muestra_serie(y,"y(n)",y_ini,True)
 	input("\nPresiona enter para continuar...")
 
-os.system(borrar)
+def conv_finita():
+
+
+clearScreen()
 op = 0
 while(op != 5):
-	op = int(input("\tCONVOLUCIÓN DISCRETA\n\nSi y(n) = x(n)*y(n)\n\n1.Convolución Finita\n2.Convolución Periodica\n3.Convolución Circular\n4.Gráficas de Entrada/Salida\n5.Salir\n"))
-	if( op == 1): 
+	op = int(input("\tCONVOLUCIÓN DISCRETA\n\nSi y(n) = x(n)*y(n)\n\n1.Convolución Finita\n2.Convolución Periodica\n3.Convolución Circular\n4.Gráficas de Entrada/Salida\n5.Salir\nOpcion:"))
+	if( op == 1):
 		print("CONVOLUCIÓN Finita")
 	if( op == 2):
 		conv_periodica()
@@ -240,4 +247,4 @@ while(op != 5):
 		conv_circular()
 	if( op == 4):
 		print("GRÁFICAS")
-	os.system(borrar)
+	clearScreen()
