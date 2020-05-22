@@ -62,15 +62,16 @@ def graficar(serie,ini,titulo):
 		aux_ini +=1
 		var_aux +=1
 
+
 	for index,element in enumerate(grafica):
-		if element == 0 and grafica[index-1] == 0 or grafica[index-1] == None and grafica[index+1]==0 and index > 0 and index < len(grafica)-2:
+		if element == 0 and index > n or index < indice0-ini:
 			grafica[index]=None
 
 	markerline, stemlines, baseline = plt.stem(aux, grafica, '-',use_line_collection=True)
 	plt.setp(baseline,color='r', linewidth= 2)
 	for i,j in zip(aux,grafica):
 		if(i!=None and j!=None ):
-			plt.annotate(str(j),xy=(i,j+0.1))
+			plt.annotate(str(j),xy=(i+0.1,j))
 
 	#plt.plot(aux,grafica,'ro')
 	plt.axhline(0,color="red")
@@ -86,7 +87,6 @@ def muestra_serie(s,nom,indice,periodica):
 	#Si la secuencia es periodica se mostrará repetidamente
 	if(periodica == True):
 		s = s*5
-		indice *= 3
 		str_s = nom +" = { ... "
 		for i in range(len(s)):
 			str_s = str_s + ", " + str(s[i])
@@ -123,6 +123,7 @@ def obtencionIndice0(serie):
 		for index,element in enumerate(serie):
 			if element == ini:
 				repetidos.append(index+1)
+				
 		print("El numero " + str(ini) +" se encuentra repetido varias veces en las posiciones " +", ".join(str(v) for v in repetidos))
 		return int(input("Por favor elige que posicion es la adecuada: "))-1
 
@@ -210,8 +211,6 @@ def conv_periodica():
 			indice += 1
 
 	y_ini = indice
-
-	print("y_ini ="+str(y_ini))
 
 	muestra_serie(y,"y(n)",y_ini,True)
 	input("\nPresiona enter para continuar...")
@@ -302,8 +301,6 @@ def conv_circular():
 			indice += 1
 
 	y_ini = indice
-	print("y_ini ="+str(y_ini))
-
 
 	muestra_serie(y,"y(n)",y_ini,True)
 	input("\nPresiona enter para continuar...")
@@ -352,8 +349,6 @@ def conv_finita():
 		aux_suma = 0
 
 	y_ini = ((x_ini*-1)+(h_ini*-1))*-1
-
-	print("y_ini ="+str(y_ini))
 
 	muestra_serie(y,"y(n)",y_ini,False)
 
