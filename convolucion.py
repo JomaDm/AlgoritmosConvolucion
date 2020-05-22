@@ -33,6 +33,7 @@ def ingresa_serie(nom):
 	clearScreen()
 	print(nom + " = " + str(s))
 	return s
+
 def graficar(serie,ini,titulo):
 	n = len(serie)
 	n_max = max(serie)
@@ -115,13 +116,14 @@ def obtencionIndice0(serie):
 		ini = int(ini)
 
 	if ini in serie and serie.count(ini) == 1 :
+		print("se encontro indice en = " +str(serie.index(ini)))
 		return serie.index(ini)
 	elif ini in serie and serie.count(ini) > 1 :
 		repetidos = []
 		for index,element in enumerate(serie):
 			if element == ini:
 				repetidos.append(index+1)
-		print("El numero",ini,"se encuentra repetido varias veces en las posiciones"," , ".join(repetidos))
+		print("El numero " + str(ini) +" se encuentra repetido varias veces en las posiciones " +", ".join(str(v) for v in repetidos))
 		return int(input("Por favor elige que posicion es la adecuada: "))-1
 
 #Funcion que hace el algoritmo de convolución periódica
@@ -209,10 +211,12 @@ def conv_periodica():
 
 	y_ini = indice
 
+	print("y_ini ="+str(y_ini))
+
 	muestra_serie(y,"y(n)",y_ini,True)
 	input("\nPresiona enter para continuar...")
 
-#Funcion que hace el algoritmo de convolución periódica
+#Funcion que hace el algoritmo de convolución circular
 def conv_circular():
 	clearScreen()
 	print("\tCONVOLUCIÓN CIRCULAR\nINSTRUCCIONES\n1.Considera a x(n) y h(n) como funciones periodicas y no repita elementos (se entiende que los elementos que ingrese van a repetir infinitamente) \n2.Ingresa un elemento a la vez\n")
@@ -298,6 +302,7 @@ def conv_circular():
 			indice += 1
 
 	y_ini = indice
+	print("y_ini ="+str(y_ini))
 
 
 	muestra_serie(y,"y(n)",y_ini,True)
@@ -346,7 +351,9 @@ def conv_finita():
 		y.append(aux_suma)
 		aux_suma = 0
 
-	y_ini = x_ini + h_ini
+	y_ini = ((x_ini*-1)+(h_ini*-1))*-1
+
+	print("y_ini ="+str(y_ini))
 
 	muestra_serie(y,"y(n)",y_ini,False)
 
@@ -355,11 +362,11 @@ clearScreen()
 
 
 op = 0
-while(op != 5):
+while(op != 4):
 	try:
-		op = int(input("\tCONVOLUCIÓN DISCRETA\n\nSi y(n) = x(n)*y(n)\n\n1.Convolución Finita\n2.Convolución Periodica\n3.Convolución Circular\n4.Gráficas de Entrada/Salida\n5.Salir\nOpcion:"))
+		op = int(input("\tCONVOLUCIÓN DISCRETA\n\nSi y(n) = x(n)*y(n)\n\n1.Convolución Finita\n2.Convolución Periodica\n3.Convolución Circular\n4.Salir\nOpcion:"))
 	except:
-		op = 5
+		op = 4
 	if( op == 1):
 		conv_finita()
 	if( op == 2):
