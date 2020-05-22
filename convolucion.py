@@ -61,15 +61,16 @@ def graficar(serie,ini,titulo):
 		aux_ini +=1
 		var_aux +=1
 
+
 	for index,element in enumerate(grafica):
-		if element == 0 and grafica[index-1] == 0 or grafica[index-1] == None and grafica[index+1]==0 and index > 0 and index < len(grafica)-2:
+		if element == 0 and index > n or index < indice0-ini:
 			grafica[index]=None
 
 	markerline, stemlines, baseline = plt.stem(aux, grafica, '-',use_line_collection=True)
 	plt.setp(baseline,color='r', linewidth= 2)
 	for i,j in zip(aux,grafica):
 		if(i!=None and j!=None ):
-			plt.annotate(str(j),xy=(i,j+0.1))
+			plt.annotate(str(j),xy=(i+0.1,j))
 
 	#plt.plot(aux,grafica,'ro')
 	plt.axhline(0,color="red")
@@ -85,7 +86,6 @@ def muestra_serie(s,nom,indice,periodica):
 	#Si la secuencia es periodica se mostrará repetidamente
 	if(periodica == True):
 		s = s*5
-		indice *= 3
 		str_s = nom +" = { ... "
 		for i in range(len(s)):
 			str_s = str_s + ", " + str(s[i])
@@ -121,7 +121,7 @@ def obtencionIndice0(serie):
 		for index,element in enumerate(serie):
 			if element == ini:
 				repetidos.append(index+1)
-		print("El numero",ini,"se encuentra repetido varias veces en las posiciones"," , ".join(repetidos))
+		print("El numero",ini,"se encuentra repetido varias veces en las posiciones",repetidos)
 		return int(input("Por favor elige que posicion es la adecuada: "))-1
 
 #Funcion que hace el algoritmo de convolución periódica
@@ -355,9 +355,9 @@ clearScreen()
 
 
 op = 0
-while(op != 5):
+while(op != 4):
 	try:
-		op = int(input("\tCONVOLUCIÓN DISCRETA\n\nSi y(n) = x(n)*y(n)\n\n1.Convolución Finita\n2.Convolución Periodica\n3.Convolución Circular\n4.Gráficas de Entrada/Salida\n5.Salir\nOpcion:"))
+		op = int(input("\tCONVOLUCIÓN DISCRETA\n\nSi y(n) = x(n)*y(n)\n\n1.Convolución Finita\n2.Convolución Periodica\n3.Convolución Circular\n4.Salir\nOpcion:"))
 	except:
 		op = 5
 	if( op == 1):
