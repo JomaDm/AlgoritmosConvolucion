@@ -4,6 +4,8 @@
 
 import os
 from sys import platform
+from matplotlib import pyplot as plt
+import numpy as np
 
 #Funcion que detecta el sistema operativo y relaciona su comando para borrar la pantalla
 def clearScreen():
@@ -31,17 +33,60 @@ def ingresa_serie(nom):
 	clearScreen()
 	print(nom + " = " + str(s))
 	return s
+def graficar(serie,ini,titulo):
+	n = len(serie)
+	n_max = max(serie)
+	n_min = min(serie)
+	if(n_min > 0):
+		n_min = 0
+
+	aux = range(-n-2,n+2,1)
+	#print(aux)
+	grafica = [0 for i in aux]
+	indice0 = int(len(grafica)/2)
+	grafica[indice0] = serie[ini]
+	#print(indice0)
+
+	aux_ini = ini - 1
+	var_aux = indice0 - 1
+	while aux_ini >= 0:
+		grafica[var_aux] = serie[aux_ini]
+		aux_ini -=1
+		var_aux -=1
+
+	aux_ini = ini + 1
+	var_aux = indice0 + 1
+	while aux_ini < n:
+		grafica[var_aux] = serie[aux_ini]
+		aux_ini +=1
+		var_aux +=1
+
+	for index,element in enumerate(grafica):
+		if element == 0 and grafica[index-1] == 0 or grafica[index-1] == None and grafica[index+1]==0 and index > 0 and index < len(grafica)-2:
+			grafica[index]=None
+
+	markerline, stemlines, baseline = plt.stem(aux, grafica, '-',use_line_collection=True)
+	plt.setp(baseline,color='r', linewidth= 2)
+	for i,j in zip(aux,grafica):
+		if(i!=None and j!=None ):
+			plt.annotate(str(j),xy=(i,j+0.1))
+
+	#plt.plot(aux,grafica,'ro')
+	plt.axhline(0,color="red")
+	plt.axvline(0,color="red")
+	plt.axis([-n-2,n+2,n_min-2,n_max+2])
+	plt.grid(True)
+	plt.title(titulo)
+	plt.show()
 
 #Funcion que muestra en pantalla la secuencia
 #Recibe como parámetro la secuencia, su nombre, el indice de inicio n(0) y la bandera que indica si es periódica o no
 def muestra_serie(s,nom,indice,periodica):
 	#Si la secuencia es periodica se mostrará repetidamente
 	if(periodica == True):
+		s = s*5
+		indice *= 3
 		str_s = nom +" = { ... "
-		for i in range(len(s)):
-			str_s = str_s + ", " + str(s[i])
-		for i in range(len(s)):
-			str_s = str_s + ", " + str(s[i])
 		for i in range(len(s)):
 			str_s = str_s + ", " + str(s[i])
 		str_s = str_s + " }      n(0) = "
@@ -56,7 +101,11 @@ def muestra_serie(s,nom,indice,periodica):
 
 	print(str_s + str(s[indice]))
 
-	
+	graficar_ = input("Quieres mostrar la grafica? (s/n) : ")
+	graficar_.lower()
+
+	if (graficar_ == "s"):
+		graficar(s,indice,nom)
 
 def obtencionIndice0(serie):
 	ini = input("¿Cuál es el elemento de inicio?: ")
@@ -301,16 +350,21 @@ def conv_finita():
 
 	muestra_serie(y,"y(n)",y_ini,False)
 
+
 clearScreen()
+
+
 op = 0
 while(op != 5):
-	op = int(input("\tCONVOLUCIÓN DISCRETA\n\nSi y(n) = x(n)*y(n)\n\n1.Convolución Finita\n2.Convolución Periodica\n3.Convolución Circular\n4.Gráficas de Entrada/Salida\n5.Salir\nOpcion:"))
+	try:
+		op = int(input("\tCONVOLUCIÓN DISCRETA\n\nSi y(n) = x(n)*y(n)\n\n1.Convolución Finita\n2.Convolución Periodica\n3.Convolución Circular\n4.Gráficas de Entrada/Salida\n5.Salir\nOpcion:"))
+	except:
+		op = 5
 	if( op == 1):
 		conv_finita()
 	if( op == 2):
 		conv_periodica()
 	if( op == 3):
 		conv_circular()
-	if( op == 4):
-		print("GRÁFICAS")
+
 	clearScreen()
